@@ -1,9 +1,9 @@
-import Timer from "../components/Timer";
+import TodoList from "../TodoList";
 
 function App() {
 	return (
 		<>
-			<Timer />
+			<TodoList></TodoList>
 		</>
 	);
 }
