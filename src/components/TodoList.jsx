@@ -1,3 +1,4 @@
+import styles from "../styles/TodoList.module.css";
 import { useEffect, useRef, useState } from "react";
 import Item from "./Item";
 import Button from "./Button";
@@ -13,11 +14,14 @@ function TodoList() {
 
 	const [message, setMessage] = useState("");
 	const timeoutIdRef = useRef(null);
+	const resetMessageTimeout = () => {
+		if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+		timeoutIdRef.current = setTimeout(() => setMessage(""), 5000);
+	};
 
 	const showTaskChangeMessage = (taskId) => {
-		if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+		resetMessageTimeout();
 		setMessage(`Вы изменили задачу ${tasks.find(({ id }) => id === taskId).title} ${new Date().toLocaleString()}`);
-		timeoutIdRef.current = setTimeout(() => setMessage(""), 5000);
 	};
 
 	useEffect(() => {
@@ -39,14 +43,22 @@ function TodoList() {
 
 	const showCompletedTasksCount = () => {
 		const completedTasks = tasks.filter((task) => task.done);
+		resetMessageTimeout();
 		setMessage(`Количество выполненных задач: ${completedTasks.length}`);
 	};
 
 	return (
 		<>
-			<Button onClick={showCompletedTasksCount}>Показать количество выполненных задач</Button>
-			{message ? <p>{message}</p> : ""}
-			<ul>
+			<Button
+				onClick={showCompletedTasksCount}
+				// Inline styles example
+				style={{ backgroundColor: "lightgray", border: "none", padding: "10px" }}
+				className={styles.button}
+			>
+				Показать количество выполненных задач
+			</Button>
+			<p className={styles.message}>{message}</p>
+			<ul className={styles["todo-list"]}>
 				{tasks.map((task) => {
 					return <Item task={task} key={task.id} checkboxChangeListener={checkboxChangeListener} />;
 				})}
